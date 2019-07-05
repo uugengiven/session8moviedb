@@ -21,16 +21,22 @@ class App extends React.Component {
     // then put it into this.state.movies
   }
 
+  selectMovie(id)
+  {
+    this.setState({movieId: id})
+  }
+
   render() {
-    console.log('Render function!', this.state.movies);
     return (
       <div className="App">
         {this.state.movies.map((movie) => {
           return (
-          <div>
+          <div className={this.state.movieId === movie.id ? "movie selected" : "movie"} onClick={() => {this.selectMovie(movie.id)}}>
             <h1>{movie.title}</h1>
             <img src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} alt="Movie Poster" />
             <p>{movie.overview}</p>
+            {(this.state.movieId === movie.id) && 
+              <h1>Controls to play the movie</h1>}
           </div>
           )
         })}
