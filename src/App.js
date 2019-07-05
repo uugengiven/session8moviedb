@@ -1,47 +1,34 @@
 import React from 'react';
 import './App.css';
-import axios from 'axios';
+import MovieList from './MovieList';
+import Movie from './Movie';
 
 class App extends React.Component {
   constructor(props)
   {
-    super(props)
+    super(props);
 
     this.state = {
-      movies: []
+      movieId: 0
     }
 
-    // hey, go grab all of the stuff from that webpage
-    axios.get("https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=b6fbc7f3f313bd395902af464ef47262")
-      .then((response) => {
-        // handle success
-        this.setState({movies: response.data.results}); // this is our movies
-      })
-    console.log('right after that axios get stuff!')
-    // then put it into this.state.movies
+    this.setId = this.setId.bind(this);
   }
 
-  selectMovie(id)
+  setId(movieId)
   {
-    this.setState({movieId: id})
+    this.setState({movieId: movieId});
   }
 
   render() {
-    return (
-      <div className="App">
-        {this.state.movies.map((movie) => {
-          return (
-          <div className={this.state.movieId === movie.id ? "movie selected" : "movie"} onClick={() => {this.selectMovie(movie.id)}}>
-            <h1>{movie.title}</h1>
-            <img src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} alt="Movie Poster" />
-            <p>{movie.overview}</p>
-            {(this.state.movieId === movie.id) && 
-              <h1>Controls to play the movie</h1>}
-          </div>
-          )
-        })}
-      </div>
-    );
+    if (this.state.movieId === 0)
+    {
+      return <MovieList setId={this.setId} />;
+    }
+    else
+    {
+      return <Movie movieId={this.state.movieId} goBack={() => {this.setId(0)}} />;
+    }
   }
 }
 
